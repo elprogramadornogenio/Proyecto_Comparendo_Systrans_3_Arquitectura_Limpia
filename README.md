@@ -8,7 +8,7 @@
 - Se ha configurado el patrón repository para crear una capa para abstraer la lógica de las diferentes consultas realizadas a bases de datos
 - Se ha implementado el patrón de inyección de dependencias para que el programa sea capas de crear las instancias de las funcionalidades que han sido instanciadas en las diferentes implementaciones con el ciclo de vida Scope.
 
-# Ver la versión de Dotnet instalada en su sistma operativo
+# Ver la versión de Dotnet instalada en su sistema operativo
 - Asegurarse de tener la versión de .NET o Dotnet especificada en el archivo global.json
 # Clonar Repositorio
 - Para Clonar el respositorio correr el siguiente comando:
