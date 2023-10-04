@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\04.Comparendo.Infraestructura\04.Comparendo.Infraestructura.csproj" />
+    <ProjectReference Include="..\03.Comparendo.Infraestructura.Persistencia\03.Comparendo.Infraestructura.Persistencia.csproj" />
+    <ProjectReference Include="..\02.Comparendo.Core.Aplicacion\02.Comparendo.Core.Aplicacion.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.1.1" />
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>_05.Comparendo.Presentacion.Consola</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
