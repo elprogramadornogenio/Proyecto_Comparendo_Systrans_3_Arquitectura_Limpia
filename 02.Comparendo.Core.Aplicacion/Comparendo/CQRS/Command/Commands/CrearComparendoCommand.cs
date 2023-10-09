@@ -1,4 +1,4 @@
-using _02.Comparendo.Core.Aplicacion.Comparendo.Utils;
+using _02.Comparendo.Core.Aplicacion.Utils;
 using MediatR;
 
 namespace _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Command.Commands

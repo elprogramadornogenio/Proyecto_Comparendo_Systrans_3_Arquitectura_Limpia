@@ -1,7 +1,7 @@
 using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Command.Commands;
 using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Query.DTO;
 using _02.Comparendo.Core.Aplicacion.Comparendo.Repositorio;
-using _02.Comparendo.Core.Aplicacion.Comparendo.Utils;
+using _02.Comparendo.Core.Aplicacion.Utils;
 using _04.Comparendo.Infraestructura.Comparendo.Validations;
 using _05.Comparendo.Presentacion.Consola.Logic.Comparendo;
 using MediatR;

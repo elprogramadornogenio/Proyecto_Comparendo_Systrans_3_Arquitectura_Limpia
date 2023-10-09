@@ -1,4 +1,4 @@
-namespace _02.Comparendo.Core.Aplicacion.Comparendo.Utils
+namespace _02.Comparendo.Core.Aplicacion.Utils
 {
     public class Response<T>
     {

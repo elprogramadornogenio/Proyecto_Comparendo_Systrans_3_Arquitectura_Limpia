@@ -1,6 +1,6 @@
 using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Command.Commands;
 using _02.Comparendo.Core.Aplicacion.Comparendo.UseCase.Interfaces;
-using _02.Comparendo.Core.Aplicacion.Comparendo.Utils;
+using _02.Comparendo.Core.Aplicacion.Utils;
 using MediatR;
 
 namespace _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Command.Handler
@@ -20,7 +20,7 @@ namespace _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Command.Handler
         {
             var resultadoComparendoCreado = await _crearComparendoUseCase
                 .crearComparendoValidation(request);
-            return resultadoComparendoCreado;
+            return resultadoComparendoCreado!;
         }
     }
 }

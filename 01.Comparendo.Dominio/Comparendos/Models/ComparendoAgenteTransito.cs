@@ -16,6 +16,6 @@ namespace _01.Comparendo.Dominio.Comparendos.Models
         public bool ActivoDB { get; set; }
         public bool Activo { get; set; }
         // relacion de muchos comparendos
-        public ICollection<Comparendos>? Comparendos { get; set; }
+        public List<Comparendos>? Comparendos { get; set; } = new();
     }
 }

@@ -8,6 +8,7 @@ namespace _05.Comparendo.Presentacion.Consola.Data.Context
         public DataContextSimulacionSimit(DbContextOptions opciones): base(opciones) {}
 
         public DbSet<CodigoInfraccion>? CodigoInfraccion { get; set; }
+        public DbSet<ControlComparendo>? ControlComparendo { get; set; }
         public DbSet<Localidad>? Localidad { get; set; }
         public DbSet<TipoDocumento>? TipoDocumento { get; set; }
         public DbSet<TipoInfractor>? TipoInfractor { get; set; }

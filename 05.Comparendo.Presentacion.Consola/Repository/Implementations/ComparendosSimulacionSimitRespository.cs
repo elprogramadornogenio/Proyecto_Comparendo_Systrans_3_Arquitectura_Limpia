@@ -1,6 +1,7 @@
 using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Command.Commands;
 using _05.Comparendo.Presentacion.Consola.Data.Context;
 using _05.Comparendo.Presentacion.Consola.Extension;
+using _05.Comparendo.Presentacion.Consola.Models;
 using _05.Comparendo.Presentacion.Consola.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -55,6 +56,11 @@ namespace _05.Comparendo.Presentacion.Consola.Repository.Implementations
                 //--------------------DATOS BÁSICOS DEl AGENTE -------------------------------//
                 join agente in _contexto.vwAgente! on comparendo.AgenteId equals agente.Id 
                 into grupoAgente from agente in grupoAgente.DefaultIfEmpty()
+
+                //--------------------DATOS AVANZADOS DEL COMPARENDO -------------------------------//
+                join controlComparendo in _contexto.ControlComparendo! on
+                comparendo.Numero equals controlComparendo.NroComparendo into grupoControlComparendo
+                from controlComparendo in grupoControlComparendo.DefaultIfEmpty()
 
                 //--------------------DATOS BÁSICOS DEL TESTIGO -------------------------------//
                 join testigo in _contexto.vwPersona! on comparendo.TestigoId equals testigo.Id
@@ -119,11 +125,11 @@ namespace _05.Comparendo.Presentacion.Consola.Repository.Implementations
                     CompPlacaAgente = agente.Placa, // OBLIGATORIO SYSTRANS
                     //--------------------DATOS AVANZADOS DEL COMPARENDO -------------------------------//
                     CompObservaciones = comparendo.Observaciones,
-                    ComFuga = 'N', // no está definido en base de datos systrans 2 // OBLIGATORIO SYSTRANS
+                    ComFuga = controlComparendo.Fuga.convertirIntChar(), // no está definido en base de datos systrans 2 // OBLIGATORIO SYSTRANS
                     ComAcci = 'N', // no está definido en base de datos systrans 2 // OBLIGATORIO SYSTRANS
-                    GradoAlcohol = 0, // OBLIGATORIO
+                    GradoAlcohol = (controlComparendo.Grado != null) ? controlComparendo.Grado: 0, // OBLIGATORIO
                     //--------------------DATOS AVANZADOS DEL COMPARENDO INMOVILIZACION -------------------------------//
-                    ComInmov = 'N', // no está definido en base de datos systrans 2 // OBLIGATORIO SYSTRANS
+                    ComInmov = controlComparendo.Inmovilizado.convertirIntChar(), // no está definido en base de datos systrans 2 // OBLIGATORIO SYSTRANS
                     ComPatioInmoviliza = comparendo.Patio,
                     ComDirPatioInmovi = comparendo.PatioDireccion,
                     ComGruaNumero = comparendo.Grua,
@@ -135,14 +141,14 @@ namespace _05.Comparendo.Presentacion.Consola.Repository.Implementations
                     ComDirecResTesti = $"{direccionTestigo.ViaPrinTipo} {direccionTestigo.ViaPrinNumero} {direccionTestigo.ViaSecTipo} {direccionTestigo.ViaSecNumero}",
                     ComTeleTestigo = testigo.Telefono,
                     //--------------------DATOS DEL DINERO MONEY DEL COMPARENDO ----------------------------------------------------//
-                    ComValor = _SALARIOMINIMO * codigoInfraccion.Salarios,
+                    ComValor = (codigoInfraccion != null) ? _SALARIOMINIMO * codigoInfraccion.Salarios : 0,
                     ComValAd = 0,
                     ComOrganismo = 25754000, // OBLIGATORIO SYSTRANS
                     ComEstadoCom = comparendo.EsatdoId != null ? comparendo.EsatdoId: 1, // OBLIGATORIO SYSTRANS
                     //----------------------------DATOS EXTRA DEL COMPARENDO------------------------------------------
-                    ComPolca = 'N',
-                    ComInfraccion = codigoInfraccion.Codigo, // OBLIGATORIO SYSTRANS
-                    ComValInfra = _SALARIOMINIMO * codigoInfraccion.Salarios + 0
+                    ComPolca =  controlComparendo.Polca.convertirIntChar(),
+                    ComInfraccion = (codigoInfraccion.Codigo != null)? codigoInfraccion.Codigo: string.Empty, // OBLIGATORIO SYSTRANS
+                    ComValInfra = (codigoInfraccion != null) ? _SALARIOMINIMO * codigoInfraccion.Salarios : 0
                 })
                 .Skip(11)
                 .Take(10)
@@ -199,6 +205,11 @@ namespace _05.Comparendo.Presentacion.Consola.Repository.Implementations
                 join agente in _contexto.vwAgente! on comparendo.AgenteId equals agente.Id 
                 into grupoAgente from agente in grupoAgente.DefaultIfEmpty()
 
+                //--------------------DATOS AVANZADOS DEL COMPARENDO -------------------------------//
+                join controlComparendo in _contexto.ControlComparendo! on
+                comparendo.Numero equals controlComparendo.NroComparendo into grupoControlComparendo
+                from controlComparendo in grupoControlComparendo.DefaultIfEmpty()
+
                 //--------------------DATOS BÁSICOS DEL TESTIGO -------------------------------//
                 join testigo in _contexto.vwPersona! on comparendo.TestigoId equals testigo.Id
                 into grupoTestigo from testigo in grupoTestigo.DefaultIfEmpty()
@@ -262,11 +273,11 @@ namespace _05.Comparendo.Presentacion.Consola.Repository.Implementations
                     CompPlacaAgente = agente.Placa, // OBLIGATORIO SYSTRANS
                     //--------------------DATOS AVANZADOS DEL COMPARENDO -------------------------------//
                     CompObservaciones = comparendo.Observaciones,
-                    ComFuga = 'N', // no está definido en base de datos systrans 2 // OBLIGATORIO SYSTRANS
+                    ComFuga = controlComparendo != null? controlComparendo.Fuga.convertirIntChar(): 'N', // no está definido en base de datos systrans 2 // OBLIGATORIO SYSTRANS
                     ComAcci = 'N', // no está definido en base de datos systrans 2 // OBLIGATORIO SYSTRANS
-                    GradoAlcohol = 0, // OBLIGATORIO
+                    GradoAlcohol = controlComparendo != null? ((controlComparendo.Grado != null) ? controlComparendo.Grado: 0) :0, // OBLIGATORIO
                     //--------------------DATOS AVANZADOS DEL COMPARENDO INMOVILIZACION -------------------------------//
-                    ComInmov = 'N', // no está definido en base de datos systrans 2 // OBLIGATORIO SYSTRANS
+                    ComInmov = controlComparendo != null? controlComparendo.Inmovilizado.convertirIntChar(): 'N', // no está definido en base de datos systrans 2 // OBLIGATORIO SYSTRANS
                     ComPatioInmoviliza = comparendo.Patio,
                     ComDirPatioInmovi = comparendo.PatioDireccion,
                     ComGruaNumero = comparendo.Grua,
@@ -283,7 +294,7 @@ namespace _05.Comparendo.Presentacion.Consola.Repository.Implementations
                     ComOrganismo = 25754000, // OBLIGATORIO SYSTRANS
                     ComEstadoCom = comparendo.EsatdoId != null ? comparendo.EsatdoId: 1, // OBLIGATORIO SYSTRANS
                     //----------------------------DATOS EXTRA DEL COMPARENDO------------------------------------------
-                    ComPolca = 'N',
+                    ComPolca = (controlComparendo != null) ?  controlComparendo.Polca.convertirIntChar(): 'N',
                     ComInfraccion = (codigoInfraccion.Codigo != null)? codigoInfraccion.Codigo: string.Empty, // OBLIGATORIO SYSTRANS
                     ComValInfra = (codigoInfraccion != null) ? _SALARIOMINIMO * codigoInfraccion.Salarios : 0
                 })

@@ -1,5 +1,5 @@
 using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Command.Commands;
-using _02.Comparendo.Core.Aplicacion.Comparendo.Utils;
+using _02.Comparendo.Core.Aplicacion.Utils;
 
 namespace _05.Comparendo.Presentacion.Consola.Logic.Comparendo
 {

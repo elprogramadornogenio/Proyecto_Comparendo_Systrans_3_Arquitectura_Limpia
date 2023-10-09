@@ -1,4 +1,5 @@
 using _01.Comparendo.Dominio.Comparendos.enums;
+using _01.Comparendo.Dominio.Comparendos.Parametricas;
 
 namespace _01.Comparendo.Dominio.Comparendos.Models
 {
@@ -66,21 +67,38 @@ namespace _01.Comparendo.Dominio.Comparendos.Models
         //--------- relacion de un ComparendoTipoVehiculo con muchos comparendos----------
         public int TipoVehiculoId { get; set; }
         public ComparendoTipoVehiculo? TipoVehiculo { get; set; }
-        public int SecretariaId { get; set; }
         //--------- relacion de un ComparendoClaseServicio con muchos comparendos----------
         public int ClaseServicioId { get; set; }
         public ComparendoClaseServicio? ClaseServicio { get; set; }
+        // -------- relacion de un ComparendoTipoInfractor con muchos comparendos-----------
+        public int? TipoInfractorId { get; set; }
+        public ComparendoTipoInfractor? TipoInfractor { get; set; }
+        // --------- relación de un InfractorTipoDocumento con muchos comparendos ----------
+        public int InfractorTipoDocumentoId { get; set; }
+        //---------- relación de una LicenciaConducciónSecretaria con muchos comparendos ---
+        public int? LicenciaConduccionSecretariaId { get; set; }
+        public SecretariaTransito? LicenciaConduccionSecretaria { get; set; }
+        //--------- relacion de una secretaria de transito con muchos comparendos----------
+        public int SecretariaId { get; set; }
+        public SecretariaTransito? SecretariaTransito { get; set; }
         //--------- relacion de un Comparendo estado con muchos comparendos-----------------
         public int EstadoComparendoId { get; set; }
         public ComparendoEstado? ComparendoEstado { get; set; }
+
+        //--------- relación de una Ciudad con muchos comparendos --------------------------
         public int MunicipioDireccionId { get; set; }
-        public int InfractorTipoDocumentoId { get; set; }
-        public int? LicenciaConduccionSecretariaId { get; set; }
-        public int? TipoInfractorId { get; set; }
+        public Ciudad? Ciudad { get; set; }
+        //--------- relacion de una secretaria de matricula a muchos comparendos
         public int? MatriculaSecretariaId { get; set; }
+        public SecretariaTransito? SecretariaTransitoMatriculado { get; set; }
+        // --------- relacion de una secretaria que exide licencia de transito con muchos comparendos
         public int? LicenciaTransitoSecretariaId { get; set; }
+        public SecretariaTransito? SecretariaLicenciaTransito { get; set; }
+        // --------- relacion de un Tipo Documento Propietario con muchos comparendos ----------
         public int? TipoDocumentoPropietarioId { get; set; }
+        // --------- relacion de una Ciudad del infractor con muchos comparendos ------------
         public int? CiudadInfractorId { get; set; }
+        public Ciudad? CiudadDelInfractor { get; set; }
         public Guid ClienteId { get; set; }
     }
 }

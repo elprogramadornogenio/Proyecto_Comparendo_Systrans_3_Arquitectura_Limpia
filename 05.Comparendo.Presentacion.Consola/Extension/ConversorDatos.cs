@@ -24,6 +24,18 @@ namespace _05.Comparendo.Presentacion.Consola.Extension
             return 'N';
         }
 
+        public static char convertirIntChar(this int? datoEntero)
+        {
+            char datoChar = (datoEntero != null || datoEntero != 0) ? 'S': 'N';
+            return datoChar;
+        }
+
+        public static char convertirIntChar(this int datoEntero)
+        {
+            char datoChar = (datoEntero != 0) ? 'S': 'N';
+            return datoChar;
+        }
+
         public static string conversionTimeSpanStringHHmm(this TimeSpan tiempoHoras)
         {
             return $"{tiempoHoras.Hours:D2}{tiempoHoras.Minutes:D2}";

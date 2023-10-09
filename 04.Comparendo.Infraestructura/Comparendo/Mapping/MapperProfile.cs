@@ -2,7 +2,7 @@ using _01.Comparendo.Dominio.Comparendos.enums;
 using _01.Comparendo.Dominio.Comparendos.Models;
 using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Command.Commands;
 using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Query.DTO;
-using _04.Comparendo.Infraestructura.Extensions;
+using _02.Comparendo.Core.Aplicacion.Extensions;
 using AutoMapper;
 
 namespace _04.Comparendo.Infraestructura.Comparendo.Mapping
@@ -50,12 +50,23 @@ namespace _04.Comparendo.Infraestructura.Comparendo.Mapping
                 .ForMember(dest => dest.FechaActualizacion, opt => opt.MapFrom(src => DateTime.UtcNow));
 
             CreateMap<CrearComparendoCommand, Comparendos>()
+                //-----------------DATOS DE AUDITORIA---------------------------------------
+                .ForMember(dest => dest.ClienteId, opt => opt.MapFrom(src => 
+                    new Guid("FDBDD067-861D-424E-69D7-08DA9C1F622A")))
+                .ForMember(dest => dest.UsuarioCreadorId, opt => opt.MapFrom(src => 
+                    new Guid("7FE04BC7-D2B9-4756-A592-D0501882DDC8")))
+                .ForMember(dest => dest.UsuarioActualizadorId, opt => opt.MapFrom(src =>
+                    new Guid("7FE04BC7-D2B9-4756-A592-D0501882DDC8")))
+                .ForMember(dest => dest.FechaCreacion, opt => opt.MapFrom(src => DateTime.UtcNow))
+                .ForMember(dest => dest.FechaActualizacion, opt => opt.MapFrom(src => DateTime.UtcNow))
+                //--------------------DATOS PARA ACTIVAR O DESACTIVAR COMPARENDO-------------------//
+                .ForMember(dest => dest.ActivoDB, opt => opt.MapFrom(src => true))
                 //--------------------DATOS BÁSICOS DEL COMPARENDO -------------------------------//
                 .ForMember(dest => dest.Numero, opt => opt.MapFrom(src => src.ComNumero))
                 .ForMember(dest => dest.Fecha, opt => opt.MapFrom(src => src.ComFecha.convertirCadenaFecha()))
                 .ForMember(dest => dest.Hora, opt => opt.MapFrom(src => src.ComHora.convertirCadenaHora()))
                 .ForMember(dest => dest.Direccion, opt => opt.MapFrom(src => src.ComDir))
-                .ForMember(dest => dest.MunicipioDireccionId, opt => opt.MapFrom(src => src.ComOrganismo))
+                .ForMember(dest => dest.MunicipioDireccionId, opt => opt.MapFrom(src => src.ComDivipoMuni))
                 .ForMember(dest => dest.Localidad, opt => opt.MapFrom(src => src.ComLocalidadComuna))
                 .ForMember(dest => dest.Placa, opt => opt.MapFrom(src => src.ComPlaca))
                 .ForMember(dest => dest.MatriculaSecretariaId, opt => opt.MapFrom(src => src.ComDivipoMatri)) // queda en observacion     
@@ -76,7 +87,7 @@ namespace _04.Comparendo.Infraestructura.Comparendo.Mapping
                 .ForMember(dest => dest.CiudadInfractorId, opt => opt.MapFrom(src => src.ComIdCiudad))
                 .ForMember(dest => dest.LicenciaConduccion, opt => opt.MapFrom(src => src.ComLicencia))
                 .ForMember(dest => dest.LicenciaConduccionCategoria, opt => opt.MapFrom(src => src.ComCategoria))
-                .ForMember(dest => dest.LicenciaTransitoSecretariaId, opt => opt.MapFrom(src => src.ComSecreExpide))
+                .ForMember(dest => dest.LicenciaConduccionSecretariaId, opt => opt.MapFrom(src => src.ComSecreExpide))
                 .ForMember(dest => dest.LicenciaVence, opt => opt.MapFrom(src => src.ComFechaVence.convertirCadenaFecha()))
                 .ForMember(dest => dest.TipoInfractorId, opt => opt.MapFrom(src => src.ComTipoInfrac))
                 .ForMember(dest => dest.LicenciaTransito, opt => opt.MapFrom(src => src.CompLicTransito))
@@ -114,9 +125,11 @@ namespace _04.Comparendo.Infraestructura.Comparendo.Mapping
                 //--------------------DATOS DEL DINERO MONEY DEL COMPARENDO ----------------------------------------------------//
                 .ForMember(dest => dest.ValorComparendo, opt => opt.MapFrom(src => src.ComValor))
                 .ForMember(dest => dest.ValorAdicional, opt => opt.MapFrom(src => src.ComValAd))
-                // falta divipo 
+                // falta divipo
+                .ForMember(dest => dest.SecretariaId, opt => opt.MapFrom(src => src.ComOrganismo))
                 .ForMember(dest => dest.EstadoComparendoId, opt => opt.MapFrom(src => src.ComEstadoCom))
-                .ForMember(dest => dest.Polca, opt => opt.MapFrom(src => (src.ComPolca!= null )? src.ComPolca.convertirCadenaBoolean(): false));
+                .ForMember(dest => dest.Polca, opt => opt.MapFrom(src => (src.ComPolca!= null )? src.ComPolca.convertirCadenaBoolean(): false))
+                .ForMember(dest => dest.Fuente, opt => opt.MapFrom(src => src.FuenteComparendo));
        
         }
     }
