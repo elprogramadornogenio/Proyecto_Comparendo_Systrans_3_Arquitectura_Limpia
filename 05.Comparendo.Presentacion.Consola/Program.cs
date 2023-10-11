@@ -99,8 +99,6 @@ if(servicioControlador != null)
             Console.WriteLine($"||#{numeroComparendo} || id: {respuesta.Data} || mensaje: {respuesta.Message} || ¿Fue exitoso?: {respuesta.Success} ||");
             numeroComparendo++; 
         }
-         
-
     }
     
 }

@@ -1,5 +1,4 @@
 using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Command.Commands;
-using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Query.DTO;
 using _02.Comparendo.Core.Aplicacion.Comparendo.Repositorio;
 using _02.Comparendo.Core.Aplicacion.Utils;
 using _04.Comparendo.Infraestructura.Comparendo.Validations;
@@ -38,6 +37,7 @@ namespace _05.Comparendo.Presentacion.Consola.logic.Comparendo
             }
         }
 
+        /*
         public async Task<List<ComparendoSimitDto>> listarRangoComparendos(
             FilterComparendoDTO filterComparendoDTO)
         {
@@ -46,6 +46,6 @@ namespace _05.Comparendo.Presentacion.Consola.logic.Comparendo
                 filterComparendoDTO.numeroComparendosConsultar
                 );
             return listaComparendos;
-        }
+        }*/
     }
 }

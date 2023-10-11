@@ -1,6 +1,6 @@
-namespace _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Query.DTO
+namespace _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Query.DTOs
 {
-    public class ComparendoSimitDto
+    public class ComparendoEstandarSimitDto
     {
         //--------------------DATOS BÁSICOS DEL COMPARENDO -------------------------------//
         // ComConsecutivo DEBE SER MENOR O IGUAL A 19999

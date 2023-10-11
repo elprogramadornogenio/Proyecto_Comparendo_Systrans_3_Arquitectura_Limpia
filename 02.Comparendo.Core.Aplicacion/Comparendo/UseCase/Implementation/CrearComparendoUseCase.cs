@@ -69,6 +69,13 @@ namespace _02.Comparendo.Core.Aplicacion.Comparendo.UseCase.Implementation
                 await existeComparendoRepetido();
                 await existeCodigoSecretariaQueReportaComparendo(); 
                 await existeEstadoComparendo();
+                validarYGenerarEdadInfractor();
+                validarYDefinirPlacaAgente();
+                validarYDefinirFuga();
+                validarYDefinirAccidente();
+                validarYDefinirInmovilizacion();
+                existeFuenteComparendo();
+                
                 /*
                     2. Validar los datos obligatorios en Systrans pero NO en Simit,
                     como no son obligatorios en Simit en el momento de importarlos
@@ -81,21 +88,7 @@ namespace _02.Comparendo.Core.Aplicacion.Comparendo.UseCase.Implementation
                 await validarYGenerarDivipoMuni(); // falta información en base de datos
                 validarYGenerarHoraComparendo();
                 validarYGenerarDireccionComparendo();
-                /*
-                    es necesario consultar base de datos si existe el
-                    divipo Municipio de lo contrario de lo contrario
-                    colocar el valor por defecto
-                */
-                
-                validarYGenerarEdadInfractor();
-                validarYDefinirPlacaAgente();
-                validarYDefinirFuga();
-                validarYDefinirAccidente();
-                validarYDefinirInmovilizacion();
-                existeFuenteComparendo();
                 existeGradoAlcohol();
-
-
                 /*
                     3. Validar datos que no son obligatorios pero que tiene relaciones
                     con otras tablas

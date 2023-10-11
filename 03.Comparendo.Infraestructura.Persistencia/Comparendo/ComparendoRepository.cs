@@ -1,9 +1,10 @@
+using System.ComponentModel.DataAnnotations;
 using _01.Comparendo.Dominio.Comparendos.Models;
 using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Command.Commands;
-using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Query.DTO;
+using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Query.DTOs;
 using _02.Comparendo.Core.Aplicacion.Comparendo.Repositorio;
+using _02.Comparendo.Core.Aplicacion.Extensions;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace _03.Comparendo.Infraestructura.Persistencia.Comparendo
@@ -51,7 +52,8 @@ namespace _03.Comparendo.Infraestructura.Persistencia.Comparendo
                 if (datosAgenteTransito == null)
                 {
                     var agenteIdentificadoPorSoloPlaca = _mapper
-                        .Map<ComparendoAgenteTransito>(new CrearAgentePorSoloPlacaCommand { Placa = placaAgente });
+                        .Map<ComparendoAgenteTransito>(new CrearAgentePorSoloPlacaCommand 
+                        { Placa = placaAgente });
                     datosAgenteTransito = await _comparendoAgenteTransitoRespository
                         .crearAgenteIndeterminadoConPlaca(agenteIdentificadoPorSoloPlaca);
                 }
@@ -67,8 +69,8 @@ namespace _03.Comparendo.Infraestructura.Persistencia.Comparendo
                             valorInfraccion
                         );
 
-                await consultaCompletada();
-                await transaccionCrearComparendoCompleto.CommitAsync();
+                //await consultaCompletada();
+                //await transaccionCrearComparendoCompleto.CommitAsync();
                 return datosComparendoCreado.Id;
             }
             catch (Exception ex)
@@ -90,12 +92,11 @@ namespace _03.Comparendo.Infraestructura.Persistencia.Comparendo
             await _contexto.Comparendo!.AddAsync(datosComparendo);
             return datosComparendo;
         }
-
         private async Task consultaCompletada()
         {
             await _contexto.SaveChangesAsync();
         }
-
+        // otro respositorio
         public async Task<bool> existeClaseServicioPorId(int? id)
         {
             var existeClaseServicio = await _contexto
@@ -116,13 +117,13 @@ namespace _03.Comparendo.Infraestructura.Persistencia.Comparendo
                 .AnyAsync(comparendo => comparendo.Numero.Equals(numeroComparendo));
             return existeComparendo;
         }
-
+        // otro repositorio
         public async Task<bool> existeTipoVehiculoPorId(int? id)
         {
             var existeTipoVehiculo = await _contexto.ComparendoTipoVehiculo!.FindAsync(id);
             return (existeTipoVehiculo != null) ? true : false;
         }
-
+        // otro repositorio
         public async Task<SecretariaTransito> traerSecretariaTransito(
             string codigoSecretariaTransito)
         {
@@ -131,32 +132,12 @@ namespace _03.Comparendo.Infraestructura.Persistencia.Comparendo
                     secretariaTransito.Codigo!.Equals(codigoSecretariaTransito));
             return secretariaTransito!;
         }
-
+        // otro repositorio
         public async Task<Ciudad> traerCiudadComparendo(string codigoCiudad)
         {
             var ciudad = await _contexto.Ciudad!
                 .FirstOrDefaultAsync(ciudad => ciudad.Codigo!.Equals(codigoCiudad));
             return ciudad!;
-        }
-
-        // consultas de queries
-        public async Task<List<ComparendoSimitDto>> getAll()
-        {
-            return await _contexto.Comparendo!
-                .AsNoTracking()
-                .ProjectTo<ComparendoSimitDto>(_mapper.ConfigurationProvider)
-                .ToListAsync();
-        }
-
-        public async Task<List<ComparendoSimitDto>> getFilter(
-            int numeroComparendoOmitir, int numeroComparendosConsultar)
-        {
-            return await _contexto.Comparendo!
-                .Skip(numeroComparendoOmitir)
-                .Take(numeroComparendosConsultar)
-                .AsNoTracking()
-                .ProjectTo<ComparendoSimitDto>(_mapper.ConfigurationProvider)
-                .ToListAsync();
         }
 
         public async Task<Comparendos> traerComparendoPorNumeroYCodigoInfraccion(
@@ -181,6 +162,121 @@ namespace _03.Comparendo.Infraestructura.Persistencia.Comparendo
             return comparendo!;
         }
 
-        
+        public async Task<bool> existeComparendoPorId(Guid? idComparendo)
+        {
+            return await _contexto.Comparendo!.FindAsync(idComparendo) != null;
+        }
+
+        public Task<IEnumerable<ComparendoEstandarSimitDto>> traerComparendosEstandarSimit(
+            List<Guid> llavesPrimariasComparendos)
+        {
+            throw new Exception();
+        }
+
+        public async Task<ComparendoEstandarSimitDto> traerComparendoEstandarSimitPorId(
+            Guid idComparendo, 
+            string codigoInfraccion
+            )
+        {
+            var comparendoEstandarSimit = await _contexto.Comparendo!
+                .Where(comparendo => comparendo.Id == idComparendo &&
+                    comparendo.ComparendoInfraccionComparendos!
+                    .Any(comparendoInfraccionComparendo => comparendoInfraccionComparendo
+                        .ComparendoTipoInfraccion.Codigo.Equals(codigoInfraccion)
+                ))
+                .Include(comparendo => comparendo.AgenteTransito) // incluimos en agente transito
+                .Include(comparendo => comparendo.ComparendoInfraccionComparendos!)
+                .ThenInclude(comparendoInfraccionComparendo => 
+                    comparendoInfraccionComparendo.ComparendoTipoInfraccion) // infracción
+                .Include(comparendo => comparendo.LicenciaConduccionSecretaria) //secretaria licencia conduccion
+                .Include(comparendo => comparendo.SecretariaTransito)
+                .Include(comparendo => comparendo.Ciudad) // municipioDireccionId
+                .Include(comparendo => comparendo.SecretariaTransitoMatriculado) // secretaria de matricula
+                .Include(comparendo => comparendo.SecretariaLicenciaTransito) // secretaria licencia transito
+                .Include(comparendo => comparendo.CiudadDelInfractor)
+                .Select(comparendo => new ComparendoEstandarSimitDto 
+                {
+                    ComNumero = comparendo.Numero,
+                    ComFecha = comparendo.Fecha.convertirFechaCadena(),
+                    ComHora = comparendo.Hora.convertirHoraCadena(),
+                    ComDir = comparendo.Direccion,
+                    ComDivipoMuni = (comparendo.Ciudad != null) ? 
+                        comparendo.Ciudad!.Codigo.convertirCadenaEntero() : 0,
+                    ComLocalidadComuna = comparendo.Localidad,
+                    ComPlaca = comparendo.Placa,
+                    ComDivipoMatri = (comparendo.SecretariaTransitoMatriculado != null) ?  
+                        comparendo.SecretariaTransitoMatriculado!.Codigo.convertirCadenaEntero(): 0,
+                    ComTipoSer = comparendo.ClaseServicioId,
+                    ComCodigoRadio = (comparendo.CodigoRadio != null) ? 
+                        (int?)comparendo.CodigoRadio : null,
+                    ComCodigoModalidad = (comparendo.CodigoModalidad != null) ? 
+                        (int?)comparendo.CodigoModalidad: null,
+                    ComCodigoPasajeros = (comparendo.CodigoPasajeros != null) ? 
+                        (int?) comparendo.CodigoPasajeros: null,
+                    ComInfraccion = comparendo.DocumentoInfractor,
+                    ComTipoDoc = comparendo.InfractorTipoDocumentoId,
+                    ComNombre = comparendo.NombreInfractor,
+                    ComApellido = comparendo.ApellidoInfractor,
+                    ComEdadInfractor = (comparendo.EdadInfractor != 0) ? comparendo.EdadInfractor: null,
+                    ComDirInfractor = comparendo.DireccionInfractor,
+                    ComEmail = comparendo.EmailInfractor,
+                    ComTeleInfractor = comparendo.TelefonoInfractor,
+                    ComIdCiudad = (comparendo.CiudadDelInfractor != null) ? 
+                        comparendo.CiudadDelInfractor.Codigo.convertirCadenaEntero(): null,
+                    ComLicencia = comparendo.LicenciaConduccion,
+                    ComCategoria = comparendo.LicenciaConduccionCategoria,
+                    ComSecreExpide = (comparendo.LicenciaConduccionSecretaria != null) ? 
+                        comparendo.LicenciaConduccionSecretaria.Codigo.convertirCadenaEntero() : null,
+                    ComFechaVence = comparendo.LicenciaVence.convertirFechaCadena(),
+                    ComTipoInfrac = comparendo.TipoInfractorId,
+                    CompLicTransito = comparendo.LicenciaTransito,
+                    ComDivipoLicen = (comparendo.SecretariaLicenciaTransito != null)? 
+                        comparendo.SecretariaLicenciaTransito.Codigo.convertirCadenaEntero(): null,
+                    ComIdentificacion = comparendo.DocumentoPropietario,
+                    ComIdTipoDocProp = comparendo.TipoDocumentoPropietarioId,
+                    ComNombreProp =  $"{comparendo.NombrePropietario} {comparendo.ApellidoPropietario}",
+                    ComNombreEmpresa = comparendo.NombreEmpresa,
+                    ComNitEmpresa = comparendo.NitEmpresa,
+                    ComTarjetaOperacion = comparendo.TarjetaOperacion,
+                    CompPlacaAgente = (comparendo.AgenteTransito != null) ? 
+                        comparendo.AgenteTransito.Placa : null,
+                    CompObservaciones = comparendo.Observaciones,
+                    ComFuga = comparendo.Fuga.convertirBooleanCadena(),
+                    ComAcci = comparendo.Accidente.convertirBooleanCadena(),
+                    ComInmov = comparendo.Inmobilizacion.convertirBooleanCadena(),
+                    ComPatioInmoviliza = comparendo.PatioInmoviliza,
+                    ComDirPatioInmovi = comparendo.DireccionPatioInmoviliza,
+                    ComGruaNumero = comparendo.GruaNumero,
+                    ComPlacaGrua = comparendo.GruaPlaca,
+                    ComConsecutInmovi = comparendo.ConsecutivoInmovilizacion,
+                    ComIdentificacionTest = comparendo.DocumentoTestigo,
+                    ComNombreTesti = $"{comparendo.NombreTestigo} {comparendo.ApellidoTestigo}",
+                    ComDirecResTesti = comparendo.DireccionTestigo,
+                    ComTeleTestigo = comparendo.TelefonoTestigo,
+                    ComValor = comparendo.ValorComparendo,
+                    ComValAd = comparendo.ValorAdicional,
+                    ComOrganismo = (comparendo.SecretariaTransito != null)? 
+                        comparendo.SecretariaTransito.Codigo.convertirCadenaEntero(): 0,
+                    ComEstadoCom = comparendo.EstadoComparendoId,
+                    ComPolca = comparendo.Polca.convertirBooleanCadena(),
+                    ComInfractor = comparendo.ComparendoInfraccionComparendos!.FirstOrDefault()!
+                        .ComparendoTipoInfraccion.Codigo,
+                    ComValInfra = comparendo.ComparendoInfraccionComparendos!.FirstOrDefault()!
+                        .ValorInfraccion,
+                    Id_Tipo_Doc_Tutor = null,
+                    Nro_Doc_Tutor = null,
+                    Nombre_Tutor = null,
+                    Apellido_Tutor = null,
+                    FotoMulta = comparendo.ComparendoElectronico.convertirBooleanCadena(),
+                    FechaNotificacion = (comparendo.FechaNotificacion != null) ? 
+                        comparendo.FechaNotificacion.convertirFechaCadena(): null,
+                    FuenteComparendo = (comparendo.Fuente != null)? (int?) comparendo.Fuente: null,
+                    LatitudComparendo = comparendo.Latitud,
+                    LongitudComparendo = comparendo.Longitud
+                })
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+            return comparendoEstandarSimit!;
+        }
     }
 }

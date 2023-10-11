@@ -5,11 +5,11 @@ using MediatR;
 
 namespace _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Command.Handler
 {
-    public class ComparendoEventHandler : 
+    public class ComparendoCommandEventHandler : 
         IRequestHandler<CrearComparendoCommand, Response<Guid>>
     {
         private readonly ICrearComparendoUseCase _crearComparendoUseCase;
-        public ComparendoEventHandler(
+        public ComparendoCommandEventHandler(
             ICrearComparendoUseCase crearComparendoUseCase
         )
         {

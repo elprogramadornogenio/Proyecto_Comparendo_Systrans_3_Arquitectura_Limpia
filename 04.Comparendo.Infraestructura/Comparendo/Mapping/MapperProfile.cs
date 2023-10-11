@@ -7,36 +7,36 @@ using AutoMapper;
 
 namespace _04.Comparendo.Infraestructura.Comparendo.Mapping
 {
-    public class MapperProfile: Profile
+    public class MapperProfile : Profile
     {
         public MapperProfile()
         {
             CreateMap<Comparendos, ComparendoSimitDto>()
-                .ForMember(ComparendoEstructuraSimit => 
+                .ForMember(ComparendoEstructuraSimit =>
                     ComparendoEstructuraSimit.ComCodigoRadio,
                     comparendo => comparendo
-                    .MapFrom(comparendoOrigen => (int?) comparendoOrigen
+                    .MapFrom(comparendoOrigen => (int?)comparendoOrigen
                     .CodigoRadio))
-                .ForMember(ComparendoEstructuraSimit => 
+                .ForMember(ComparendoEstructuraSimit =>
                     ComparendoEstructuraSimit.ComCodigoModalidad,
                     comparendo => comparendo
-                    .MapFrom(comparendoOrigen => (int?) comparendoOrigen
+                    .MapFrom(comparendoOrigen => (int?)comparendoOrigen
                     .CodigoModalidad))
-                .ForMember(ComparendoEstructuraSimit => 
+                .ForMember(ComparendoEstructuraSimit =>
                     ComparendoEstructuraSimit.ComCodigoPasajeros,
                     comparendo => comparendo
-                    .MapFrom(comparendoOrigen => (int?) comparendoOrigen
+                    .MapFrom(comparendoOrigen => (int?)comparendoOrigen
                     .CodigoPasajeros))
-                .ForMember(ComparendoEstructuraSimit => 
+                .ForMember(ComparendoEstructuraSimit =>
                     ComparendoEstructuraSimit.FuenteComparendo,
                     comparendo => comparendo
-                    .MapFrom(comparendoOrigen => (int?) comparendoOrigen
+                    .MapFrom(comparendoOrigen => (int?)comparendoOrigen
                     .Fuente));
 
             CreateMap<CrearAgentePorSoloPlacaCommand, ComparendoAgenteTransito>()
-                .ForMember(dest => dest.ClienteId, opt => opt.MapFrom(src => 
+                .ForMember(dest => dest.ClienteId, opt => opt.MapFrom(src =>
                     new Guid("FDBDD067-861D-424E-69D7-08DA9C1F622A")))
-                .ForMember(dest => dest.UsuarioCreadorId, opt => opt.MapFrom(src => 
+                .ForMember(dest => dest.UsuarioCreadorId, opt => opt.MapFrom(src =>
                     new Guid("7FE04BC7-D2B9-4756-A592-D0501882DDC8")))
                 .ForMember(dest => dest.UsuarioActualizadorId, opt => opt.MapFrom(src =>
                     new Guid("7FE04BC7-D2B9-4756-A592-D0501882DDC8")))
@@ -51,9 +51,9 @@ namespace _04.Comparendo.Infraestructura.Comparendo.Mapping
 
             CreateMap<CrearComparendoCommand, Comparendos>()
                 //-----------------DATOS DE AUDITORIA---------------------------------------
-                .ForMember(dest => dest.ClienteId, opt => opt.MapFrom(src => 
+                .ForMember(dest => dest.ClienteId, opt => opt.MapFrom(src =>
                     new Guid("FDBDD067-861D-424E-69D7-08DA9C1F622A")))
-                .ForMember(dest => dest.UsuarioCreadorId, opt => opt.MapFrom(src => 
+                .ForMember(dest => dest.UsuarioCreadorId, opt => opt.MapFrom(src =>
                     new Guid("7FE04BC7-D2B9-4756-A592-D0501882DDC8")))
                 .ForMember(dest => dest.UsuarioActualizadorId, opt => opt.MapFrom(src =>
                     new Guid("7FE04BC7-D2B9-4756-A592-D0501882DDC8")))
@@ -72,9 +72,9 @@ namespace _04.Comparendo.Infraestructura.Comparendo.Mapping
                 .ForMember(dest => dest.MatriculaSecretariaId, opt => opt.MapFrom(src => src.ComDivipoMatri)) // queda en observacion     
                 .ForMember(dest => dest.TipoVehiculoId, opt => opt.MapFrom(src => src.ComTipoVehi))
                 .ForMember(dest => dest.ClaseServicioId, opt => opt.MapFrom(src => src.ComTipoSer))
-                .ForMember(dest => dest.CodigoRadio, opt => opt.MapFrom(src => (src.ComCodigoRadio != null)? (eRadioAccion) src.ComCodigoRadio: (eRadioAccion?)null))
-                .ForMember(dest => dest.CodigoModalidad, opt => opt.MapFrom(src => (src.ComCodigoModalidad != null) ? (eModalidadTransporte) src.ComCodigoModalidad: (eModalidadTransporte?)null))
-                .ForMember(dest => dest.CodigoPasajeros, opt => opt.MapFrom(src => (src.ComCodigoPasajeros != null) ? (eCodigoPasajeros) src.ComCodigoPasajeros: (eCodigoPasajeros?)null))
+                .ForMember(dest => dest.CodigoRadio, opt => opt.MapFrom(src => (src.ComCodigoRadio != null) ? (eRadioAccion)src.ComCodigoRadio : (eRadioAccion?)null))
+                .ForMember(dest => dest.CodigoModalidad, opt => opt.MapFrom(src => (src.ComCodigoModalidad != null) ? (eModalidadTransporte)src.ComCodigoModalidad : (eModalidadTransporte?)null))
+                .ForMember(dest => dest.CodigoPasajeros, opt => opt.MapFrom(src => (src.ComCodigoPasajeros != null) ? (eCodigoPasajeros)src.ComCodigoPasajeros : (eCodigoPasajeros?)null))
                 //--------------------DATOS BÁSICOS DEL INFRACTOR -------------------------------//
                 .ForMember(dest => dest.InfractorTipoDocumentoId, opt => opt.MapFrom(src => src.ComTipoInfrac))
                 .ForMember(dest => dest.DocumentoInfractor, opt => opt.MapFrom(src => src.ComInfractor))
@@ -97,20 +97,20 @@ namespace _04.Comparendo.Infraestructura.Comparendo.Mapping
                 .ForMember(dest => dest.TipoDocumentoPropietarioId, opt => opt.MapFrom(src => src.ComIdTipoDocProp))
                 .ForMember(dest => dest.NombrePropietario, opt => opt.MapFrom(src => src.ComNombreProp))
                 //.ForMember(dest => dest.ApellidoPropietario, opt => opt.MapFrom(src => src.ComNombreProp))
-                
+
                 //--------------------DATOS BÁSICOS DE LA EMPRESA Y TARJETA OPERACION -------------------------------//
                 .ForMember(dest => dest.NombreEmpresa, opt => opt.MapFrom(src => src.ComNombreEmpresa))
                 .ForMember(dest => dest.NitEmpresa, opt => opt.MapFrom(src => src.ComNitEmpresa))
                 .ForMember(dest => dest.TarjetaOperacion, opt => opt.MapFrom(src => src.ComTarjetaOperacion))
 
                 //--------------------DATOS BÁSICOS DEl AGENTE -------------------------------//
-                
+
                 //--------------------DATOS AVANZADOS DEL COMPARENDO -------------------------------//
                 .ForMember(dest => dest.Observaciones, opt => opt.MapFrom(src => src.CompObservaciones))
-                .ForMember(dest => dest.Fuga, opt => opt.MapFrom(src => (src.ComFuga != null)? src.ComFuga.convertirCadenaBoolean(): false))
-                .ForMember(dest => dest.Accidente, opt => opt.MapFrom(src => (src.ComAcci!=null)? src.ComAcci.convertirCadenaBoolean(): false))
+                .ForMember(dest => dest.Fuga, opt => opt.MapFrom(src => (src.ComFuga != null) ? src.ComFuga.convertirCadenaBoolean() : false))
+                .ForMember(dest => dest.Accidente, opt => opt.MapFrom(src => (src.ComAcci != null) ? src.ComAcci.convertirCadenaBoolean() : false))
                 //--------------------DATOS AVANZADOS DEL COMPARENDO INMOVILIZACION -------------------------------//
-                .ForMember(dest => dest.Inmobilizacion, opt => opt.MapFrom(src => (src.ComInmov!=null)?src.ComInmov.convertirCadenaBoolean(): false))
+                .ForMember(dest => dest.Inmobilizacion, opt => opt.MapFrom(src => (src.ComInmov != null) ? src.ComInmov.convertirCadenaBoolean() : false))
                 .ForMember(dest => dest.PatioInmoviliza, opt => opt.MapFrom(src => src.ComPatioInmoviliza))
                 .ForMember(dest => dest.DireccionPatioInmoviliza, opt => opt.MapFrom(src => src.ComDirPatioInmovi))
                 .ForMember(dest => dest.GruaNumero, opt => opt.MapFrom(src => src.ComGruaNumero))
@@ -128,9 +128,20 @@ namespace _04.Comparendo.Infraestructura.Comparendo.Mapping
                 // falta divipo
                 .ForMember(dest => dest.SecretariaId, opt => opt.MapFrom(src => src.ComOrganismo))
                 .ForMember(dest => dest.EstadoComparendoId, opt => opt.MapFrom(src => src.ComEstadoCom))
-                .ForMember(dest => dest.Polca, opt => opt.MapFrom(src => (src.ComPolca!= null )? src.ComPolca.convertirCadenaBoolean(): false))
-                .ForMember(dest => dest.Fuente, opt => opt.MapFrom(src => src.FuenteComparendo));
-       
+                .ForMember(dest => dest.Polca, opt => opt.MapFrom(src => (src.ComPolca != null) ? src.ComPolca.convertirCadenaBoolean() : false))
+                //----------------------------DATOS DEL TUTOR------------------------------------------//
+                /*
+                .ForMember(_ => _, opt => opt.MapFrom(src => src.Id_Tipo_Doc_Tutor))
+                .ForMember(_ => _, opt => opt.MapFrom(src => src.Nro_Doc_Tutor))
+                .ForMember(_ => _, opt => opt.MapFrom(src => src.Nombre_Tutor))
+                .ForMember(_ => _, opt => opt.MapFrom(src => src.Apellido_Tutor))
+                */
+                //----------------------------DATOS COMPARENDO ELECTRÓNICO-----------------------------//
+                .ForMember(dest => dest.ComparendoElectronico, opt => opt.MapFrom(src => src.FotoMulta.convertirCadenaBoolean()))
+                .ForMember(dest => dest.FechaNotificacion, opt => opt.MapFrom(src => src.FechaNotificacion.convertirCadenaFecha()))
+                .ForMember(dest => dest.Fuente, opt => opt.MapFrom(src => (src.FuenteComparendo != null) ? (eFuenteComparendo)src.FuenteComparendo : (eFuenteComparendo?)null))
+                .ForMember(dest => dest.Latitud, opt => opt.MapFrom(src => src.LatitudComparendo))
+                .ForMember(dest => dest.Longitud, opt => opt.MapFrom(src => src.LongitudComparendo));
         }
     }
 }

@@ -1,5 +1,5 @@
 using _01.Comparendo.Dominio.Comparendos.Models;
-using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Query.DTO;
+using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Query.DTOs;
 
 namespace _02.Comparendo.Core.Aplicacion.Comparendo.Repositorio
 {
@@ -17,14 +17,17 @@ namespace _02.Comparendo.Core.Aplicacion.Comparendo.Repositorio
             string codigoInfraccion);
             
         Task<bool> existeComparendoPorNumero(string numeroComparendo);
+        Task<bool> existeComparendoPorId(Guid? idComparendo);
         Task<bool> existeTipoVehiculoPorId(int? id);
         Task<bool> existeClaseServicioPorId(int? id);
         Task<bool> existeComparendoEstadoPorId(int? id);
         Task<SecretariaTransito> traerSecretariaTransito(string codigoSecretariaTransito);
         Task<Ciudad> traerCiudadComparendo(string codigoCiudad);
-        Task<List<ComparendoSimitDto>> getAll();
-        Task<List<ComparendoSimitDto>> getFilter(
-            int numeroComparendoOmitir, 
-            int numeroComparendosConsultar);
+        Task<IEnumerable<ComparendoEstandarSimitDto>> traerComparendosEstandarSimit(
+            List<Guid> llavesPrimariasComparendos);
+        Task<ComparendoEstandarSimitDto> traerComparendoEstandarSimitPorId(
+            Guid idComparendo, 
+            string codigoInfraccion
+        );
     }
 }
