@@ -9,58 +9,61 @@ namespace _02.Comparendo.Core.Aplicacion.Comparendo.UseCase.Implementation
     public class ListarComparendosUseCase : IListarComparendosUseCase
     {
         private readonly IComparendoRepository _comparendoRepository;
-        private FilterComparendoRequestDto? filterComparendoRequestDto;
-        private const int _cantidadMaximaComparendosAdmitidosPorSimit = 20000;
+        private readonly IComparendoTipoInfraccionRepository _tipoInfraccionRepository;
+        private ComparendoRequestDto? comparendoRequestDto;
 
         public ListarComparendosUseCase(
-            IComparendoRepository comparendoRepository
+            IComparendoRepository comparendoRepository,
+            IComparendoTipoInfraccionRepository tipoInfraccionRepository
         )
         {
             _comparendoRepository = comparendoRepository;
+            _tipoInfraccionRepository = tipoInfraccionRepository;
         }
-        public async Task<Response<IEnumerable<ComparendoEstandarSimitDto>>> listarComparendosValidation(
-            FilterComparendoRequestDto resquest)
+        public async Task<Response<ComparendoEstandarSimitDto>> listarComparendosValidation(
+            ComparendoRequestDto resquest)
         {
-            filterComparendoRequestDto = resquest;
-            esNullFiltroComparendo();
-            validarCantidadClavesPrimariasConsultarComparendos();
-            await verificarExistenciaClavesPrimariasComparendo();
-            await verificarExistenciaCodigosInfraccion();
+            comparendoRequestDto = resquest;
+            try
+            {
+                esNullFiltroComparendo();
+                await verificarExistenciaClavePrimaria();
+                await verificarExistenciaCodigosInfraccion();
+                return new Response<ComparendoEstandarSimitDto>(
+                    await _comparendoRepository
+                        .traerComparendoEstandarSimitPorId(
+                            comparendoRequestDto!.Id,
+                            comparendoRequestDto!.CodigoInfraccion
+                    ), "Comparendo Listado Correctamente");
+            }
+            catch (Exception ex)
+            {
+                return new Response<ComparendoEstandarSimitDto>(ex.Message);
+            }
+            
             throw new NotImplementedException();
         }
 
         private void esNullFiltroComparendo() {
-            if(
-                filterComparendoRequestDto == null || 
-                filterComparendoRequestDto.IdentificadoresUnicosComparendos == null ||
-                filterComparendoRequestDto.IdentificadoresUnicosComparendos.Count == 0
-                )
-                throw new Exception("Enviar al menos un comparendo para poder generar plano SIMIT");
+            if(comparendoRequestDto == null)
+                throw new Exception("Comparendo No cumple los requisitos para ser incluido en Simit");
             
         }
 
-        private void validarCantidadClavesPrimariasConsultarComparendos()
+        private async Task verificarExistenciaClavePrimaria()
         {
-            var cantidadClavesPrimariasComparendos = filterComparendoRequestDto!
-                .IdentificadoresUnicosComparendos!.Count;
-            if(cantidadClavesPrimariasComparendos > _cantidadMaximaComparendosAdmitidosPorSimit)
-                throw new Exception($"No se puede enviar más de {_cantidadMaximaComparendosAdmitidosPorSimit} registros para generar plano SIMIT");
-        }
-
-        private async Task verificarExistenciaClavesPrimariasComparendo()
-        {
-            var comparendosRequestDtos = filterComparendoRequestDto!
-                .IdentificadoresUnicosComparendos!;
-            foreach (var comparendoRequest in comparendosRequestDtos)
-            {
-                if(! await _comparendoRepository.existeComparendoPorId(comparendoRequest.Id))
-                    throw new Exception($"La información proporcionada no es válida");
-            }
+            if(! await _comparendoRepository.existeComparendoPorId(comparendoRequestDto!.Id))
+                throw new Exception($"No existe comparendo");
+            
         }
 
         private async Task verificarExistenciaCodigosInfraccion()
         {
-            
+            if(comparendoRequestDto!.CodigoInfraccion == null)
+                throw new Exception($"Comparendo NO cumple los requisitos para generar plano"); 
+            if(! await _tipoInfraccionRepository
+                .existeInfraccion(comparendoRequestDto!.CodigoInfraccion))
+                throw new Exception($"No existe infracción del comparendo");
         }
     }
 }

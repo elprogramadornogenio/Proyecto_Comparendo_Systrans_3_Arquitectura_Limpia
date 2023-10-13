@@ -174,8 +174,8 @@ namespace _03.Comparendo.Infraestructura.Persistencia.Comparendo
         }
 
         public async Task<ComparendoEstandarSimitDto> traerComparendoEstandarSimitPorId(
-            Guid idComparendo, 
-            string codigoInfraccion
+            Guid? idComparendo, 
+            string? codigoInfraccion
             )
         {
             var comparendoEstandarSimit = await _contexto.Comparendo!

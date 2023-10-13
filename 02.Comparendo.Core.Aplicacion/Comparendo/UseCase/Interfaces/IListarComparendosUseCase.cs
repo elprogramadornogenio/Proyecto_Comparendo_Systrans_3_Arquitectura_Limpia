@@ -6,7 +6,7 @@ namespace _02.Comparendo.Core.Aplicacion.Comparendo.UseCase.Interfaces
 {
     public interface IListarComparendosUseCase
     {
-        Task<Response<IEnumerable<ComparendoEstandarSimitDto>>> listarComparendosValidation (
-            FilterComparendoRequestDto filterComparendoRequestDto);
+        Task<Response<ComparendoEstandarSimitDto>> listarComparendosValidation (
+            ComparendoRequestDto filterComparendoRequestDto);
     }
 }

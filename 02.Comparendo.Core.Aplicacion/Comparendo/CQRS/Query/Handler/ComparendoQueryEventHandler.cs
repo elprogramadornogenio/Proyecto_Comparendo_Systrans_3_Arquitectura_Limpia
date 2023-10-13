@@ -7,8 +7,8 @@ using MediatR;
 namespace _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Query.Handler
 {
     public class ComparendoQueryEventHandler :
-        IRequestHandler<FilterComparendoRequestDto,
-            Response<IEnumerable<ComparendoEstandarSimitDto>>>
+        IRequestHandler<ComparendoRequestDto,
+            Response<ComparendoEstandarSimitDto>>
     {
         private readonly IListarComparendosUseCase _listarComparendosUseCase;
 
@@ -16,8 +16,8 @@ namespace _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Query.Handler
         {
             _listarComparendosUseCase = listarComparendosUseCase;
         }
-        public async Task<Response<IEnumerable<ComparendoEstandarSimitDto>>> Handle(
-            FilterComparendoRequestDto request, CancellationToken cancellationToken)
+        public async Task<Response<ComparendoEstandarSimitDto>> Handle(
+            ComparendoRequestDto request, CancellationToken cancellationToken)
         {
             var resultadoListadoComparendos = await _listarComparendosUseCase
                 .listarComparendosValidation(request);

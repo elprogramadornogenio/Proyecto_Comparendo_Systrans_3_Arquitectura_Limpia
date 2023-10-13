@@ -1,7 +1,6 @@
 using _01.Comparendo.Dominio.Comparendos.enums;
 using _01.Comparendo.Dominio.Comparendos.Models;
 using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Command.Commands;
-using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Query.DTO;
 using _02.Comparendo.Core.Aplicacion.Extensions;
 using AutoMapper;
 
@@ -11,28 +10,6 @@ namespace _04.Comparendo.Infraestructura.Comparendo.Mapping
     {
         public MapperProfile()
         {
-            CreateMap<Comparendos, ComparendoSimitDto>()
-                .ForMember(ComparendoEstructuraSimit =>
-                    ComparendoEstructuraSimit.ComCodigoRadio,
-                    comparendo => comparendo
-                    .MapFrom(comparendoOrigen => (int?)comparendoOrigen
-                    .CodigoRadio))
-                .ForMember(ComparendoEstructuraSimit =>
-                    ComparendoEstructuraSimit.ComCodigoModalidad,
-                    comparendo => comparendo
-                    .MapFrom(comparendoOrigen => (int?)comparendoOrigen
-                    .CodigoModalidad))
-                .ForMember(ComparendoEstructuraSimit =>
-                    ComparendoEstructuraSimit.ComCodigoPasajeros,
-                    comparendo => comparendo
-                    .MapFrom(comparendoOrigen => (int?)comparendoOrigen
-                    .CodigoPasajeros))
-                .ForMember(ComparendoEstructuraSimit =>
-                    ComparendoEstructuraSimit.FuenteComparendo,
-                    comparendo => comparendo
-                    .MapFrom(comparendoOrigen => (int?)comparendoOrigen
-                    .Fuente));
-
             CreateMap<CrearAgentePorSoloPlacaCommand, ComparendoAgenteTransito>()
                 .ForMember(dest => dest.ClienteId, opt => opt.MapFrom(src =>
                     new Guid("FDBDD067-861D-424E-69D7-08DA9C1F622A")))

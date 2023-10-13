@@ -26,8 +26,8 @@ namespace _02.Comparendo.Core.Aplicacion.Comparendo.Repositorio
         Task<IEnumerable<ComparendoEstandarSimitDto>> traerComparendosEstandarSimit(
             List<Guid> llavesPrimariasComparendos);
         Task<ComparendoEstandarSimitDto> traerComparendoEstandarSimitPorId(
-            Guid idComparendo, 
-            string codigoInfraccion
+            Guid? idComparendo, 
+            string? codigoInfraccion
         );
     }
 }

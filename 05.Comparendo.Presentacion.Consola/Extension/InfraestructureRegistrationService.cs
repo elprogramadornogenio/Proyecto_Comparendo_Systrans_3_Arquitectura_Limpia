@@ -28,10 +28,11 @@ namespace _05.Comparendo.Presentacion.Consola.Extension
             servicios
             .AddScoped<IComparendoInfraccionComparendoRepository, ComparendoInfraccionComparendoRepository>();
 
-
             // registrar casos de uso en ciclos de vida
             servicios
             .AddScoped<ICrearComparendoUseCase, CrearComparendoUseCase>();
+            servicios
+            .AddScoped<IListarComparendosUseCase, ListarComparendosUseCase>();
 
             // registrar ejemplos de controladores
             servicios

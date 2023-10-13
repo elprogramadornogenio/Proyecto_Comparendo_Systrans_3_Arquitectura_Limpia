@@ -1,4 +1,3 @@
-using System.IO;
 using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Command.Commands;
 using _05.Comparendo.Presentacion.Consola.Logic.Mapping;
 namespace _05.Comparendo.Presentacion.Consola.Logic.LecturaArchivo
