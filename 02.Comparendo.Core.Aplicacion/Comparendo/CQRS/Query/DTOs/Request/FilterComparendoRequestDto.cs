@@ -5,6 +5,6 @@ namespace _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Query.DTOs.Request
 {
     public class FilterComparendoRequestDto
     {
-        public List<ComparendoRequestDto>? IdentificadoresUnicosComparendos { get; set; }
+        public List<ComparendoRequestDto>? IdentificadoresUnicosComparendos { get; set; } = new();
     }
 }

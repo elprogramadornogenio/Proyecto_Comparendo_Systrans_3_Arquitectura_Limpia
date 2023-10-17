@@ -1,6 +1,7 @@
 using _01.Comparendo.Dominio.Comparendos.enums;
 using _01.Comparendo.Dominio.Comparendos.Models;
 using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Command.Commands;
+using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Query.DTOs;
 using _02.Comparendo.Core.Aplicacion.Extensions;
 using AutoMapper;
 
@@ -119,6 +120,118 @@ namespace _04.Comparendo.Infraestructura.Comparendo.Mapping
                 .ForMember(dest => dest.Fuente, opt => opt.MapFrom(src => (src.FuenteComparendo != null) ? (eFuenteComparendo)src.FuenteComparendo : (eFuenteComparendo?)null))
                 .ForMember(dest => dest.Latitud, opt => opt.MapFrom(src => src.LatitudComparendo))
                 .ForMember(dest => dest.Longitud, opt => opt.MapFrom(src => src.LongitudComparendo));
+
+            CreateMap<Comparendos, ComparendoEstandarSimitDto>()
+                //--------------------DATOS BÁSICOS DEL COMPARENDO ---------------------------//
+                .ForMember(dest => dest.ComNumero, opt => opt.MapFrom(src => src.Numero))
+                .ForMember(dest => dest.ComFecha, opt => opt.MapFrom(src => src.Fecha.convertirFechaCadena()))
+                .ForMember(dest => dest.ComHora, opt => opt.MapFrom(src => src.Hora.convertirHoraCadena()))
+                .ForMember(dest => dest.ComDir, opt => opt.MapFrom(src => src.Direccion))
+                .ForMember(dest => dest.ComDivipoMuni, opt => opt.MapFrom(src => 
+                    (src.Ciudad != null) ? src.Ciudad!.Codigo.convertirCadenaEntero() : 0))
+                .ForMember(dest => dest.ComLocalidadComuna, opt => opt.MapFrom(src => src.Localidad))
+                .ForMember(dest => dest.ComPlaca, opt => opt.MapFrom(src => src.Placa))
+                .ForMember(dest => dest.ComDivipoMatri, opt => opt.MapFrom(src => 
+                    (src.SecretariaTransitoMatriculado != null) ?  
+                        src.SecretariaTransitoMatriculado!.Codigo.convertirCadenaEntero(): 0))
+                .ForMember(dest => dest.ComTipoSer, opt => opt.MapFrom(src => src.ClaseServicioId))
+                .ForMember(dest => dest.ComCodigoRadio, opt => opt.MapFrom(src =>
+                    (src.CodigoRadio != null) ? (int?)src.CodigoRadio : null))
+                .ForMember(dest => dest.ComCodigoModalidad, opt => opt.MapFrom(src =>
+                    (src.CodigoModalidad != null) ? (int?)src.CodigoModalidad: null))
+                .ForMember(dest => dest.ComCodigoModalidad, opt => opt.MapFrom(src =>
+                    (src.CodigoPasajeros != null) ? (int?) src.CodigoPasajeros: null))
+                //--------------------DATOS BÁSICOS DEL INFRACTOR ----------------------------//
+                .ForMember(dest => dest.ComInfraccion, opt => opt.MapFrom(src => src.DocumentoInfractor))
+                .ForMember(dest => dest.ComTipoDoc, opt => opt.MapFrom(src => src.InfractorTipoDocumentoId))
+                .ForMember(dest => dest.ComNombre, opt => opt.MapFrom(src => src.NombreInfractor))
+                .ForMember(dest => dest.ComApellido, opt => opt.MapFrom(src => src.ApellidoInfractor))
+                .ForMember(dest => dest.ComEdadInfractor, opt => opt.MapFrom(src => (src.EdadInfractor != 0) ? 
+                    (int?) src.EdadInfractor: null))
+                .ForMember(dest => dest.ComDirInfractor, opt => opt.MapFrom(src => src.DireccionInfractor))
+                .ForMember(dest => dest.ComEmail, opt => opt.MapFrom(src => src.EmailInfractor))
+                .ForMember(dest => dest.ComTeleInfractor, opt => opt.MapFrom(src => src.TelefonoInfractor))
+                .ForMember(dest => dest.ComIdCiudad, opt => opt.MapFrom(src =>
+                    (src.CiudadDelInfractor != null) ? 
+                        (int?) src.CiudadDelInfractor.Codigo.convertirCadenaEntero(): null))
+                .ForMember(dest => dest.ComLicencia, opt => opt.MapFrom(src => src.LicenciaConduccion))
+                .ForMember(dest => dest.ComCategoria, opt => opt.MapFrom(src => src.LicenciaConduccionCategoria))
+                .ForMember(dest => dest.ComSecreExpide, opt => opt.MapFrom(src => 
+                    (src.LicenciaConduccionSecretaria != null) ? 
+                        (int?) src.LicenciaConduccionSecretaria.Codigo.convertirCadenaEntero() : null))
+                .ForMember(dest => dest.ComFechaVence, opt => opt.MapFrom(src => src.LicenciaVence.convertirFechaCadena()))
+                .ForMember(dest => dest.ComTipoInfrac, opt => opt.MapFrom(src => src.TipoInfractorId))
+                .ForMember(dest => dest.CompLicTransito, opt => opt.MapFrom(src => src.LicenciaTransito))
+                .ForMember(dest => dest.ComDivipoLicen, opt => opt.MapFrom(src =>
+                    (src.SecretariaLicenciaTransito != null)? 
+                        (int?) src.SecretariaLicenciaTransito.Codigo.convertirCadenaEntero(): null))
+                //--------------------DATOS BÁSICOS DEL PROPIETARIO ----------------------------//
+                .ForMember(dest => dest.ComIdentificacion, opt => opt.MapFrom(src => src.DocumentoPropietario))
+                .ForMember(dest => dest.ComIdentificacion, opt => opt.MapFrom(src => src.TipoDocumentoPropietarioId))
+                .ForMember(dest => dest.ComNombreProp, opt => opt.MapFrom(src => 
+                    ConcatenarNombres.
+                        concatenarNombresComparendo(src.NombrePropietario, src.ApellidoPropietario)))
+                //--------------------DATOS BÁSICOS DE LA EMPRESA Y TARJETA OPERACION ----------//
+                .ForMember(dest => dest.ComNombreEmpresa, opt => opt.MapFrom(src => src.NombreEmpresa))
+                .ForMember(dest => dest.ComNitEmpresa, opt => opt.MapFrom(src => src.NitEmpresa))
+                .ForMember(dest => dest.ComTarjetaOperacion, opt => opt.MapFrom(src => src.TarjetaOperacion))
+                //--------------------DATOS BÁSICOS DEl AGENTE ---------------------------------//
+                .ForMember(dest => dest.CompPlacaAgente, opt => opt.MapFrom(src => 
+                    (src.AgenteTransito != null) ? 
+                        src.AgenteTransito.Placa : null))
+                //--------------------DATOS AVANZADOS DEL COMPARENDO ---------------------------//
+                .ForMember(dest => dest.CompObservaciones, opt => opt.MapFrom(src => src.Observaciones))
+                .ForMember(dest => dest.ComFuga, opt => opt.MapFrom(src => 
+                    src.Fuga.convertirBooleanCadena()))
+                .ForMember(dest => dest.ComAcci, opt => opt.MapFrom(src => 
+                    src.Accidente.convertirBooleanCadena()))
+                //--------------------DATOS AVANZADOS DEL COMPARENDO INMOVILIZACION ------------//
+                .ForMember(dest => dest.ComInmov, opt => opt.MapFrom(src =>
+                    src.Inmobilizacion.convertirBooleanCadena()))
+                .ForMember(dest => dest.ComPatioInmoviliza, opt => opt.MapFrom(src =>
+                    src.PatioInmoviliza))
+                .ForMember(dest => dest.ComDirPatioInmovi, opt => opt.MapFrom(src =>
+                    src.DireccionPatioInmoviliza))
+                .ForMember(dest => dest.ComGruaNumero, opt => opt.MapFrom(src => src.GruaNumero))
+                .ForMember(dest => dest.ComPlacaGrua, opt => opt.MapFrom(src => src.GruaPlaca))
+                .ForMember(dest => dest.ComConsecutInmovi, opt => opt.MapFrom(src => src.ConsecutivoInmovilizacion))
+                //--------------------DATOS DEL TESTIGO -----------------------------------------//
+                .ForMember(dest => dest.ComIdentificacionTest, opt => opt.MapFrom(src => src.DocumentoTestigo))
+                .ForMember(dest => dest.ComNombreTesti, opt => opt.MapFrom(src => 
+                    ConcatenarNombres.concatenarNombresComparendo(src.NombreTestigo, src.ApellidoTestigo)))
+                .ForMember(dest => dest.ComDirecResTesti, opt => opt.MapFrom(src => src.DireccionTestigo))
+                .ForMember(dest => dest.ComTeleTestigo, opt => opt.MapFrom(src => src.TelefonoTestigo))
+                //--------------------DATOS DEL DINERO MONEY DEL COMPARENDO --------------------//
+                .ForMember(dest => dest.ComValor, opt => opt.MapFrom(src => src.ValorComparendo))
+                .ForMember(dest => dest.ComValAd, opt => opt.MapFrom(src => src.ValorAdicional))
+                .ForMember(dest => dest.ComOrganismo, opt => opt.MapFrom(src => 
+                    (src.SecretariaTransito != null)? 
+                        src.SecretariaTransito.Codigo.convertirCadenaEntero(): 0))
+                .ForMember(dest => dest.ComEstadoCom, opt => opt.MapFrom(src => src.EstadoComparendoId))
+                //----------------------------DATOS EXTRA DEL COMPARENDO--------------------------//
+                .ForMember(dest => dest.ComPolca, opt => opt.MapFrom(src => 
+                    src.Polca.convertirBooleanCadena()))
+                .ForMember(dest => dest.ComInfractor, opt => opt.MapFrom(src => 
+                    src.ComparendoInfraccionComparendos!.FirstOrDefault()!
+                        .ComparendoTipoInfraccion.Codigo))
+                .ForMember(dest => dest.ComValInfra, opt => opt.MapFrom(src =>
+                    src.ComparendoInfraccionComparendos!.FirstOrDefault()!
+                        .ValorInfraccion))
+                //----------------------------DATOS DEL TUTOR-------------------------------------//
+                .ForMember(dest => dest.Id_Tipo_Doc_Tutor, opt => opt.MapFrom(src => (int?) null))
+                .ForMember(dest => dest.Nro_Doc_Tutor, opt => opt.MapFrom(src => (string?) null))
+                .ForMember(dest => dest.Nombre_Tutor, opt => opt.MapFrom(src => (string?) null))
+                .ForMember(dest => dest.Apellido_Tutor, opt => opt.MapFrom(src => (string?) null))
+                //----------------------------DATOS COMPARENDO ELECTRÓNICO------------------------//
+                .ForMember(dest => dest.FotoMulta, opt => opt.MapFrom(src => src.
+                    ComparendoElectronico.convertirBooleanCadena()))
+                .ForMember(dest => dest.FechaNotificacion, opt => opt.MapFrom(src =>
+                    (src.FechaNotificacion != null) ? 
+                        src.FechaNotificacion.convertirFechaCadena(): null))
+                .ForMember(dest => dest.FuenteComparendo, opt => opt.MapFrom(src =>
+                    (src.Fuente != null)? (int?) src.Fuente: null))
+                .ForMember(dest => dest.LatitudComparendo, opt => opt.MapFrom(src => src.Latitud))
+                .ForMember(dest => dest.LongitudComparendo, opt => opt.MapFrom(src => src.Longitud));
         }
     }
 }

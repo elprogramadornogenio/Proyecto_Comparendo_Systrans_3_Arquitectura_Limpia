@@ -52,7 +52,11 @@ namespace _05.Comparendo.Presentacion.Consola.logic.Comparendo
                     throw new Exception("Debe insertar datos");
                 var validacionComparendoRequestDto = new ListarComparendoValidator();
                 var crearArchivoComparendosEstandarSimit = new CreacionArchivo(
-                    $"../../Data/{_codigoDeNuestraDivipo}comp.txt");
+                    $"Data/{_codigoDeNuestraDivipo}comp.txt");
+                
+                var numeroConsecutivo = 0;
+                var sumreg = 0m;
+                var sumASCII = 0L;
 
                 foreach (var comparendoRequestDto in listaComparendosConsultar)
                 {
@@ -62,27 +66,29 @@ namespace _05.Comparendo.Presentacion.Consola.logic.Comparendo
                     var respuestaComparendo = await _mediator
                         .Send(comparendoRequestDto);
                     if(respuestaComparendo.Data != null)
-                        crearArchivoComparendosEstandarSimit.
-                            EscribirArchivoSaltoLinea(respuestaComparendo.Data
-                                .generarLineaTextoComparendoEstandarSimit());   
+                    {
+                        numeroConsecutivo++;
+                        respuestaComparendo.Data.ComConsecutivo = numeroConsecutivo;
+                        var cadenaGeneradaComparendo = respuestaComparendo.Data
+                                .generarLineaTextoComparendoEstandarSimit();
+                        await crearArchivoComparendosEstandarSimit.
+                            EscribirArchivoSaltoLinea(cadenaGeneradaComparendo);
+                        // generar campos de registro de control que son acumulables
+                        sumreg += respuestaComparendo.Data.ComValInfra;
+                        sumASCII += cadenaGeneradaComparendo.convertirLineaStringASCII(); 
+                    }
                 }
-                
+                // generar registros definitivos de control en el archivo plano
+                var CodChequeo = (int)Math.Ceiling((decimal) sumASCII / 10000);
+                var lineaControl = $"{numeroConsecutivo},{sumreg},{_codigoDeNuestraDivipo},{CodChequeo}";
+                await crearArchivoComparendosEstandarSimit.
+                            EscribirArchivoSaltoLinea(lineaControl);
+
             }
             catch (Exception ex)
             {
                 throw new Exception($"No se ha podido consultar {ex}");
             }
         }
-
-        /*
-        public async Task<List<ComparendoSimitDto>> listarRangoComparendos(
-            FilterComparendoDTO filterComparendoDTO)
-        {
-            var listaComparendos = await _comparendoRepository.getFilter(
-                filterComparendoDTO.numeroComparendoOmitir,
-                filterComparendoDTO.numeroComparendosConsultar
-                );
-            return listaComparendos;
-        }*/
     }
 }

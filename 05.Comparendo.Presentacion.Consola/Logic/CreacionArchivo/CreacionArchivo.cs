@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace _05.Comparendo.Presentacion.Consola.Logic.CreacionArchivo
 {
     public class CreacionArchivo
@@ -8,13 +10,15 @@ namespace _05.Comparendo.Presentacion.Consola.Logic.CreacionArchivo
             _rutaArchivo = rutaArchivo;
         }
 
-        public void EscribirArchivoSaltoLinea(string textoParaInsertarEnElArchivo)
+        public async Task EscribirArchivoSaltoLinea(string textoParaInsertarEnElArchivo)
         {
             try
             {
-                using (StreamWriter escribirEnElArchivo = new StreamWriter(_rutaArchivo))
+                var codificacionArchivoISOLatin = Encoding.GetEncoding("ISO-8859-1");
+                using (StreamWriter escribirEnElArchivo = new StreamWriter(_rutaArchivo, true, codificacionArchivoISOLatin))
                 {
-                    escribirEnElArchivo.WriteLineAsync(textoParaInsertarEnElArchivo);
+                    await escribirEnElArchivo.WriteLineAsync(textoParaInsertarEnElArchivo);
+                    //escribirEnElArchivo.Close();
                 }
             }
             catch (Exception ex)

@@ -1,5 +1,4 @@
 using _01.Comparendo.Dominio.Comparendos.enums;
-using _01.Comparendo.Dominio.Comparendos.Parametricas;
 
 namespace _01.Comparendo.Dominio.Comparendos.Models
 {

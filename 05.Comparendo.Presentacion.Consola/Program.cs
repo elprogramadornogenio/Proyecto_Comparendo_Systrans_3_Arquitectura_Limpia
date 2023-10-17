@@ -1,4 +1,5 @@
 ﻿
+using _02.Comparendo.Core.Aplicacion.Comparendo.CQRS.Query.DTOs.Request;
 using _02.Comparendo.Core.Aplicacion.Utils;
 using _05.Comparendo.Presentacion.Consola.Extension;
 using _05.Comparendo.Presentacion.Consola.Helpers;
@@ -20,18 +21,21 @@ var comparendosSimulacionSimit = coleccionServicios
 
 try
 {
-    bool salirDelPrograma = false;
+    bool salirDelPrograma = true;
     do
     {
-        int opcionEscogidaOperacionComparendos = 0;
+        int opcionEscogidaOperacionComparendos = 2;
+        /*
         do
         {
+            Console.WriteLine("---------------------------------------------------------");
+            Console.WriteLine("---------------------------------------------------------");
             Console.WriteLine("Ingresa el número de opción para realizar una tarea");
             Console.WriteLine("1. Migrar archivos planos de Simit a Systrans");
             Console.WriteLine("2. Exportar comparendos de systrans a archivos planos en Estandar Simit");
             Console.WriteLine("Digita cualquier numero diferente a 1 y 2 para salir del programa");
             Console.Write("Ingresa el número: ");
-        } while (!int.TryParse(Console.ReadLine(), out opcionEscogidaOperacionComparendos));
+        } while (!int.TryParse(Console.ReadLine(), out opcionEscogidaOperacionComparendos));*/
 
         switch ((OpcionEscogida)opcionEscogidaOperacionComparendos)
         {
@@ -84,26 +88,29 @@ try
                 break;
 
             case OpcionEscogida.GenerarArchivoPlanoExportarComparendosSimit:
-                /*
-                if (servicioControlador != null)
+                if(servicioControlador != null) 
                 {
-                    var lecturaArchivo = new LecturaArchivo("Data/25754000comp.txt");
-                    var comparendos = await lecturaArchivo.VerContenidoArchivo();
-
-                    var numeroComparendo = 1;
-
-                    foreach (var comparendo in comparendos)
+                    try
                     {
-                        if (comparendo != null)
-                        {
-                            var respuesta = await servicioControlador.agregarComparendo(comparendo);
-                            Console.WriteLine($"||#{numeroComparendo} || id: {respuesta.Data} || mensaje: {respuesta.Message} || ¿Fue exitoso?: {respuesta.Success} ||");
-                            numeroComparendo++;
-                        }
+                        var comparendosGenerarArchivoPlano = new FilterComparendoRequestDto();
+                        comparendosGenerarArchivoPlano.IdentificadoresUnicosComparendos!
+                            .Add(new ComparendoRequestDto {
+                                Id = new Guid("CD8F5ACA-F8F6-4A84-20EF-08DBC8E4E774"),
+                                CodigoInfraccion = "C14"
+                            });
+                        comparendosGenerarArchivoPlano.IdentificadoresUnicosComparendos!
+                            .Add(new ComparendoRequestDto {
+                                Id = new Guid("FE7F963F-3C0E-4DDC-00E2-08DBC8F3355D"),
+                                CodigoInfraccion = "C02"
+                            });
+                        await servicioControlador
+                        .listarComparendosPorIdyCodigoInfraccion(comparendosGenerarArchivoPlano);
                     }
-
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.Message);
+                    }
                 }
-                */
                 Console.WriteLine("Se ha generado Archivos Planos de Simit");
                 break;
 
