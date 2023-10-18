@@ -70,8 +70,8 @@ namespace _03.Comparendo.Infraestructura.Persistencia.Comparendo
                             valorInfraccion
                         );
 
-                //await consultaCompletada();
-                //await transaccionCrearComparendoCompleto.CommitAsync();
+                await consultaCompletada();
+                await transaccionCrearComparendoCompleto.CommitAsync();
                 return datosComparendoCreado.Id;
             }
             catch (Exception ex)
@@ -195,7 +195,8 @@ namespace _03.Comparendo.Infraestructura.Persistencia.Comparendo
                 .Include(comparendo => comparendo.SecretariaTransitoMatriculado) // secretaria de matricula
                 .Include(comparendo => comparendo.SecretariaLicenciaTransito) // secretaria licencia transito
                 .Include(comparendo => comparendo.CiudadDelInfractor)
-                
+                // Esto lo comento es por fines educativos como tal este select es remplazado
+                // por ProjectTo<ComparendoEstandarSimitDto>(_mapper.ConfigurationProvider)
                 /*
                 .Select(comparendo => new ComparendoEstandarSimitDto 
                 {

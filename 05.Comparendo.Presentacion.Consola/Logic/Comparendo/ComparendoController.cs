@@ -79,7 +79,7 @@ namespace _05.Comparendo.Presentacion.Consola.logic.Comparendo
                     }
                 }
                 // generar registros definitivos de control en el archivo plano
-                var CodChequeo = (int)Math.Ceiling((decimal) sumASCII / 10000);
+                var CodChequeo = (decimal) sumASCII % 10000;
                 var lineaControl = $"{numeroConsecutivo},{sumreg},{_codigoDeNuestraDivipo},{CodChequeo}";
                 await crearArchivoComparendosEstandarSimit.
                             EscribirArchivoSaltoLinea(lineaControl);

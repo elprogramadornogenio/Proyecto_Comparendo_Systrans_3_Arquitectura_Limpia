@@ -24,8 +24,7 @@ try
     bool salirDelPrograma = true;
     do
     {
-        int opcionEscogidaOperacionComparendos = 2;
-        /*
+        int opcionEscogidaOperacionComparendos = 0;
         do
         {
             Console.WriteLine("---------------------------------------------------------");
@@ -35,12 +34,11 @@ try
             Console.WriteLine("2. Exportar comparendos de systrans a archivos planos en Estandar Simit");
             Console.WriteLine("Digita cualquier numero diferente a 1 y 2 para salir del programa");
             Console.Write("Ingresa el número: ");
-        } while (!int.TryParse(Console.ReadLine(), out opcionEscogidaOperacionComparendos));*/
+        } while (!int.TryParse(Console.ReadLine(), out opcionEscogidaOperacionComparendos));
 
         switch ((OpcionEscogida)opcionEscogidaOperacionComparendos)
         {
             case OpcionEscogida.MigrarComparendosDeSimitASystrans:
-                /*
                 if (comparendosSimulacionSimit != null && servicioControlador != null)
                 {
                     string ubicacionArchivo = "Data/errores.txt";
@@ -77,13 +75,43 @@ try
                         }
                         
                         Console.WriteLine("Migración Completada");
+                        /////////////////////////////////////////////////////////////////////////////////////
+                        /*
+                            Este código que está comentado es para importar comparendos de archivo planos enviados
+                            por simit.
+                        */
+
+
+                        /*
+                        #region DefinirControllador
+
+                        if(servicioControlador != null)
+                        {
+                            var lecturaArchivo = new LecturaArchivo("Data/25754000comp.txt");
+                            var comparendos = await lecturaArchivo.VerContenidoArchivo();
+                            
+                            var numeroComparendo = 1;
+                            var respuesta = new Response<Guid>();
+                            
+                            foreach (var comparendo in comparendos)
+                            { 
+                                if(comparendo != null) 
+                                {
+                                    respuesta = await servicioControlador.agregarComparendo(comparendo);
+                                    Console.WriteLine($"||#{numeroComparendo} || id: {respuesta.Data} || mensaje: {respuesta.Message} || ¿Fue exitoso?: {respuesta.Success} ||");
+                                    numeroComparendo++; 
+                                }
+                            }
+                            
+                        }
+                        #endregion
+                        */
                     }
                     catch (IOException e)
                     {
                         Console.WriteLine("Ocurrió un error al crear el archivo: " + e.Message);
                     }
                 }
-                */
                 Console.WriteLine("Datos de Simit Migrados a Systrans");
                 break;
 
@@ -130,29 +158,4 @@ catch (Exception ex)
 
 
 
-
-/*
-#region DefinirControllador
-
-if(servicioControlador != null)
-{
-    var lecturaArchivo = new LecturaArchivo("Data/25754000comp.txt");
-    var comparendos = await lecturaArchivo.VerContenidoArchivo();
-    
-    var numeroComparendo = 1;
-    var respuesta = new Response<Guid>();
-    
-    foreach (var comparendo in comparendos)
-    { 
-        if(comparendo != null) 
-        {
-            respuesta = await servicioControlador.agregarComparendo(comparendo);
-            Console.WriteLine($"||#{numeroComparendo} || id: {respuesta.Data} || mensaje: {respuesta.Message} || ¿Fue exitoso?: {respuesta.Success} ||");
-            numeroComparendo++; 
-        }
-    }
-    
-}
-#endregion
-*/
 

@@ -1,4 +1,3 @@
-using System.Text;
 namespace _05.Comparendo.Presentacion.Consola.Extension
 {
     public static class ConversorComparendoEstandarSimitASCIIEntero
